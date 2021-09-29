@@ -2,13 +2,13 @@
 -- Dozer is result skin for beatoraja
 -- It is based on "RESULT SIMPLE FM" and "RESULT SIMPLE FM for beatoraja".
 -- @author Suzu Yuuki
--- @release 1.0.2
+-- @release 1.2.0
 
 ---ヘッダ定義.
 -- main_state, skin_config などのモジュールはここでは使うことができません。
 local header = {
 	type = 7, -- result
-	name = "Dozer - RESULT \"NOT\" SIMPLE FM",
+	name = "Dozer - RESULT \"NOT\" SIMPLE FM 1.2.0",
 	w = 1920,
 	h = 1080,
 	playstart = 1000,
@@ -97,12 +97,12 @@ local header = {
 				{ name = "Show Date and Time (y/M/d H:m:s)", op = 915 },
 			}
 		},
-		{
-			name = "Ending Animation", category = "Ending Animation", item = {
-				{ name = "Fade Out", op = 991 },
-				{ name = "ModernChic Shutter (needs ModernChic Select Skin)", op = 992 },
-			}
-		},
+		-- {
+		-- 	name = "Ending Animation", category = "Ending Animation", item = {
+		-- 		{ name = "Fade Out", op = 991 },
+		-- 		{ name = "ModernChic Shutter (needs ModernChic Select Skin)", op = 992 },
+		-- 	}
+		-- },
 	},
 	filepath = {
 		--[[
@@ -131,6 +131,7 @@ local header = {
 		{ name = "Rank Image", path = "parts/rank/*", def = "Default" },
 		--{ name = "-------- Stage File Surrogate Image Customize", path = "_dummy/*" },
 		{ name = "Stage File Surrogate", path = "parts/StageFileSurrogate/*.png", def = "#Default" },
+		{ name = "Ending Animation", category = "Ending Animation", path = "ending/*", def = "FadeOut" },
 	},
 	offset = {
 		--[[
@@ -210,11 +211,6 @@ local function isShowDateAndTime()
 	return skin_config.option["Show Current Time"] == 915
 end
 
---- 終了アニメーションに ModernChic Select スキンのシャッターを使用するかどうか.
-local function useModernChicShutter()
-	return skin_config.option["Ending Animation"] == 992
-end
-
 -- --------------------------------
 -- -------- 外部 lua 呼び出しメソッド定義
 -- --------------------------------
@@ -272,6 +268,41 @@ local function loadCustomRankScript(skin, basePosLeft)
 	end
 end
 
+--- 終了アニメーションの定義ファイルを読み込みます.
+-- @skin main メソッドの変数 "skin"
+local function loadCustomEndingAnimationScript(skin)
+	-- skin_config.get_path 関数を使うと、* を含んだ（オプション依存の）パスを解決してくれる
+	local customPath = skin_config.get_path("ending/*") .. "/ending.lua"
+	-- pcall 関数を使い、エラーが起きても止まらないようにする
+	-- （カスタム部分はスキンのユーザーが編集することを想定してのエラー処理ですが、
+	-- もちろん必須ではありません）
+	local status, parts = pcall(function()
+		-- 指定されたパスのスクリプトを実行するには dofile 関数を使う
+		-- （require はディレクトリがドット区切りなので今回は使えない）
+		return dofile(customPath).load()
+	end)
+
+	-- 読み込みに成功した場合
+	if status then
+		-- 実行結果の source, image, destination をスキン本体にマージする
+		if parts.source then
+			for _, v in ipairs(parts.source) do
+				table.insert(skin.source, v)
+			end
+		end
+		if parts.image then
+			for _, v in ipairs(parts.image) do
+				table.insert(skin.image, v)
+			end
+		end
+		if parts.destination then
+			for _, v in ipairs(parts.destination) do
+				table.insert(skin.destination, v)
+			end
+		end
+	end
+end
+
 -- --------------------------------
 -- -------- メインメソッド
 -- --------------------------------
@@ -305,7 +336,6 @@ local function main()
 		{ id = 14, path = "parts/cleartype.png" },
 		{ id = 15, path = "parts/rank/*/rank.png" },
 		{ id = 16, path = "parts/StageFileSurrogate/*.png" },
-		{ id = 99, path = "../modernchic/Select/parts/mainframe.png" },
 	}
 	skin.font = {
 		--[[
@@ -343,9 +373,6 @@ local function main()
 		{ id = "lblRightArrow", src = 12, x = 109, y = 157, w = 11, h = 16 },
 		-- stagefile surrogate image
 		{ id = "imgStageFileSurrogate", src = 16, x = 0, y = 0, w = -1, h = -1 },
-		-- ending animation using ModernChic Select
-		{ id = "shutter-l", src = 99, x = 0, y = 0, w = 1004, h = 1080 },
-		{ id = "shutter-r", src = 99, x = 1020, y = 0, w = 1003, h = 1080 },
 	}
 	skin.imageset = {
 		--[[
@@ -934,38 +961,7 @@ local function main()
 		}
 	})
 	-- ending animation
-	if useModernChicShutter() then
-		-- ModernChic shutter closing
-		table.insert(skin.destination, {
-			id = -110, blend = 1, loop = 1000, timer = 2, dst = {
-				{ time = 0, x = 0, y = 0, w = 1920, h = 1080, a = 0 },
-				{ time = 999, x = 0, y = 0, w = 1920, h = 1080, a = 0 },
-				{ time = 1000, a = 255 },
-			}
-		})
-		table.insert(skin.destination, {
-			id = "shutter-l", loop = 1000, timer = 2, dst = {
-				{ time = 0, x = -1004, y = 0, w = 1004, h = 1080, acc = 2 },
-				{ time = 800 },
-				{ time = 1000, x = 0 }
-			}
-		})
-		table.insert(skin.destination, {
-			id = "shutter-r", loop = 1000, timer = 2, dst = {
-				{ time = 0, x = 1919, y = 0, w = 1003, h = 1080, acc = 2 },
-				{ time = 800 },
-				{ time = 1000, x = 915 }
-			}
-		})
-	else
-		-- basic fade out
-		table.insert(skin.destination, {
-			id = -110, blend = 1, loop = 500, timer = 2, dst = {
-				{ time = 0, x = 0, y = 0, w = 1920, h = 1080, a = 0 },
-				{ time = 500, a = 255 },
-			}
-		})
-	end
+	loadCustomEndingAnimationScript(skin)
 
 	return skin
 end
