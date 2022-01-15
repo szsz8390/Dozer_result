@@ -1,10 +1,10 @@
 Dozer - RESULT "NOT" SIMPLE FM
-ver. 1.1.0
+ver. 1.2.0
 
 ■このスキンについて
 
 	beatoraja 用のリザルトスキンです。
-	RESULT SIMPLE FM をベースに、FullHD (1928 x 1080) で表示できるようにしてあります。
+	RESULT SIMPLE FM をベースに、FullHD (1920 x 1080) で表示できるようにしてあります。
 	フォントに採用した x14y20pxScoreDozer がスキン名の元ネタになっています。
 	なお、色々付け加えた結果あまりシンプルでもなくなったので "NOT" を付けています。
 
@@ -18,7 +18,7 @@ ver. 1.1.0
 		合わせて表示することができます。
 
 	・FunctionModified 要素
-		レイヤ画像のアニメーションやランク画像表示は lua ファイルにより定義されており、
+		レイヤ画像のアニメーションやランク画像表示などは lua ファイルにより定義されており、
 		単なる画像差し替え以上のカスタマイズが可能です。
 
 ■導入方法
@@ -127,13 +127,6 @@ ver. 1.1.0
 	ただし、それにより発生した問題について当方は責任を負いかねます。
 	また、このスキンについて、元スキン作成者さまに問い合わせることを固く禁じます。
 
-■改変時の注意
-
-	このスキンは動作速度向上を図るため、通常は minify 版 (result_min.lua) をロードします。
-	このソースは大変読みにくいため、改変を行う場合は result_src.lua を呼び出すように
-	result.luaskin の記述を変更した上で、result_src.lua に変更を加えていくことをオススメします。
-	なお、実際に動作速度が向上しているかどうかは未知数です。
-
 ■既知の問題点
 
 ・リプレイ再生の場合、ゲージオプションが正しくない
@@ -210,12 +203,6 @@ ver. 1.1.0
 	Travis Soule
 	https://isorepublic.com/photo/vintage-car-interior/
 
-	■lua 関係
-
-	Lua Minifier
-	GoOnlineTools
-	https://goonlinetools.com/lua-minifier/
-
 ■作成者
 
 悠木 鈴
@@ -224,6 +211,10 @@ https://sz8390.hatenablog.com/
 
 
 ■更新履歴
+ver 1.2.0
+	minify 版を廃止
+	Ending Animation を lua カスタマイズ対応化
+	Ending Animation の ModernChicShutter を ModernChic Select 3.0 のファイル構成に対応
 
 ver 1.1.0
 	beatoraja 0.8.1 のカテゴリ表示に対応

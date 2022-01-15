@@ -11,7 +11,7 @@ local function load()
 	parts.destination = {}
 
 	-- ModernChic shutter closing
-	table.insert(parts.source, { id = 99, path = "../modernchic/Select/parts/mainframe.png" })
+	table.insert(parts.source, { id = 99, path = "../ModernChic/Select/parts/jp/mainframe.png" })
 	table.insert(parts.image, { id = "shutter-l", src = 99, x = 0, y = 0, w = 1004, h = 1080 })
 	table.insert(parts.image, { id = "shutter-r", src = 99, x = 1020, y = 0, w = 1003, h = 1080 })
 

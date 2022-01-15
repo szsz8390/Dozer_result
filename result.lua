@@ -4,10 +4,8 @@
 -- @author Suzu Yuuki
 -- @release 1.2.0
 
----ヘッダ定義.
--- main_state, skin_config などのモジュールはここでは使うことができません。
 local header = {
-	type = 7, -- result
+	type = 7,
 	name = "Dozer - RESULT \"NOT\" SIMPLE FM 1.2.0",
 	w = 1920,
 	h = 1080,
@@ -50,14 +48,6 @@ local header = {
 		}
 	},
 	property = {
-		--[[
-			bms.player.beatoraja.skin.JSONSkinLoader.Property
-			String name, PropertyItem[] item, String def
-				PropertyItem
-				String name, int op
-				op 900 ~ 998
-		]]
-		--{ name = "-------- Customize", category = "Customize", item = { { name = "-", op = 998 } } },
 		{
 			name = "Background Image", category = "Background Image", item = {
 				{ name = "According to Rank", op = 901 },
@@ -97,47 +87,31 @@ local header = {
 				{ name = "Show Date and Time (y/M/d H:m:s)", op = 915 },
 			}
 		},
-		-- {
-		-- 	name = "Ending Animation", category = "Ending Animation", item = {
-		-- 		{ name = "Fade Out", op = 991 },
-		-- 		{ name = "ModernChic Shutter (needs ModernChic Select Skin)", op = 992 },
-		-- 	}
-		-- },
 	},
 	filepath = {
-		--[[
-			bms.player.beatoraja.skin.JSONSkinLoader.FilePath
-			String name, String path, String def
-		]]
-		-- カスタムファイル
-		-- name 属性がかぶらないように注意
-		--{ name = "-------- Background Image Customize", category = "Background Image Customize", path = "_dummy/*" },
+		-- { name = "-------- Background Image Customize", category = "Background Image Customize", path = "_dummy/*" },
 		{ name = "Background AAA", category = "Background AAA", path = "background/AAA/*.png", def = "Random" },
 		{ name = "Background AA", category = "Background AA", path = "background/AA/*.png", def = "Random" },
 		{ name = "Background A", category = "Background A", path = "background/A/*.png", def = "Random" },
 		{ name = "Background CLEAR", category = "Background CLEAR", path = "background/CLEAR/*.png", def = "Random" },
 		{ name = "Background FAILED", category = "Background FAILED", path = "background/FAILED/*.png", def = "Random" },
 		{ name = "Background ALL", category = "Background ALL", path = "background/ALL/*.png", def = "Random" },
-		--{ name = "-------- Layer Image Customize", category = "Layer Image Customize", path = "_dummy/*" },
+		-- { name = "-------- Layer Image Customize", category = "Layer Image Customize", path = "_dummy/*" },
 		{ name = "Layer AAA", category = "Layer AAA", path = "layer/AAA/*.png", def = "Random" },
 		{ name = "Layer AA", category = "Layer AA", path = "layer/AA/*.png", def = "Random" },
 		{ name = "Layer A", category = "Layer A", path = "layer/A/*.png", def = "Random" },
 		{ name = "Layer CLEAR", category = "Layer CLEAR", path = "layer/CLEAR/*.png", def = "Random" },
 		{ name = "Layer FAILED", category = "Layer FAILED", path = "layer/FAILED/*.png", def = "Random" },
 		{ name = "Layer ALL", category = "Layer ALL", path = "layer/ALL/*.png", def = "Random" },
-		--{ name = "-------- Layer Animation Customize", path = "_dummy/*" },
+		-- { name = "-------- Layer Animation Customize", path = "_dummy/*" },
 		{ name = "Layer Animation", path = "layer/animation/*", def = "NoAnimation" },
-		--{ name = "-------- Rank Image Customize", path = "_dummy/*" },
+		-- { name = "-------- Rank Image Customize", path = "_dummy/*" },
 		{ name = "Rank Image", path = "parts/rank/*", def = "Default" },
-		--{ name = "-------- Stage File Surrogate Image Customize", path = "_dummy/*" },
+		-- { name = "-------- Stage File Surrogate Image Customize", path = "_dummy/*" },
 		{ name = "Stage File Surrogate", path = "parts/StageFileSurrogate/*.png", def = "#Default" },
 		{ name = "Ending Animation", category = "Ending Animation", path = "ending/*", def = "FadeOut" },
 	},
 	offset = {
-		--[[
-			bms.player.beatoraja.skin.JSONSkinLoader.Offset
-			String name, int id, boolean x, y, w, h, r, a
-		]]
 		-- カスタムオフセット
 	}
 }
@@ -220,20 +194,11 @@ end
 -- @param ids destination に設定する id のリスト
 -- @param ops destination に設定する op のリスト
 local function loadCustomLayerAnimationScript(skin, ids, ops)
-	-- skin_config.get_path 関数を使うと、* を含んだ（オプション依存の）パスを解決してくれる
 	local customPath = skin_config.get_path("layer/animation/*") .. "/layer.lua"
-	-- pcall 関数を使い、エラーが起きても止まらないようにする
-	-- （カスタム部分はスキンのユーザーが編集することを想定してのエラー処理ですが、
-	-- もちろん必須ではありません）
 	local status, parts = pcall(function()
-		-- 指定されたパスのスクリプトを実行するには dofile 関数を使う
-		-- （require はディレクトリがドット区切りなので今回は使えない）
 		return dofile(customPath).load(ids, ops)
 	end)
-
-	-- 読み込みに成功した場合
 	if status then
-		-- 実行結果の destination をスキン本体にマージする
 		for _, v in ipairs(parts.destination) do
 			table.insert(skin.destination, v)
 		end
@@ -245,20 +210,11 @@ end
 -- @param basePosLeftInfo デフォルトの左オフセットです。グラフサイドにより変化します。
 --                        グラフサイド 左: 0 右: 1344
 local function loadCustomRankScript(skin, basePosLeft)
-	-- skin_config.get_path 関数を使うと、* を含んだ（オプション依存の）パスを解決してくれる
 	local customPath = skin_config.get_path("parts/rank/*") .. "/rank.lua"
-	-- pcall 関数を使い、エラーが起きても止まらないようにする
-	-- （カスタム部分はスキンのユーザーが編集することを想定してのエラー処理ですが、
-	-- もちろん必須ではありません）
 	local status, parts = pcall(function()
-		-- 指定されたパスのスクリプトを実行するには dofile 関数を使う
-		-- （require はディレクトリがドット区切りなので今回は使えない）
 		return dofile(customPath).load(15, basePosLeft)
 	end)
-
-	-- 読み込みに成功した場合
 	if status then
-		-- 実行結果の image, destination をスキン本体にマージする
 		for _, v in ipairs(parts.image) do
 			table.insert(skin.image, v)
 		end
@@ -271,20 +227,11 @@ end
 --- 終了アニメーションの定義ファイルを読み込みます.
 -- @skin main メソッドの変数 "skin"
 local function loadCustomEndingAnimationScript(skin)
-	-- skin_config.get_path 関数を使うと、* を含んだ（オプション依存の）パスを解決してくれる
 	local customPath = skin_config.get_path("ending/*") .. "/ending.lua"
-	-- pcall 関数を使い、エラーが起きても止まらないようにする
-	-- （カスタム部分はスキンのユーザーが編集することを想定してのエラー処理ですが、
-	-- もちろん必須ではありません）
 	local status, parts = pcall(function()
-		-- 指定されたパスのスクリプトを実行するには dofile 関数を使う
-		-- （require はディレクトリがドット区切りなので今回は使えない）
 		return dofile(customPath).load()
 	end)
-
-	-- 読み込みに成功した場合
 	if status then
-		-- 実行結果の source, image, destination をスキン本体にマージする
 		if parts.source then
 			for _, v in ipairs(parts.source) do
 				table.insert(skin.source, v)
@@ -315,10 +262,6 @@ local function main()
 	end
 	-- 以下でスキン本体のデータを定義します
 	skin.source = {
-		--[[
-			bms.player.beatoraja.skin.JSONSkinLoader.Source
-			String id, String path
-		]]
 		{ id = 0, path = "background/AAA/*.png" },
 		{ id = 1, path = "background/AA/*.png" },
 		{ id = 2, path = "background/A/*.png" },
@@ -338,19 +281,9 @@ local function main()
 		{ id = 16, path = "parts/StageFileSurrogate/*.png" },
 	}
 	skin.font = {
-		--[[
-			bms.player.beatoraja.skin.JSONSkinLoader.Font
-			String id, String path
-		]]
 		{ id = 0, path = "font/GenShinGothic-Heavy.ttf" },
 	}
 	skin.image = {
-		--[[
-			bms.player.beatoraja.skin.JSONSkinLoader.Image
-			String id, String src, int x, y, w, h,
-			int divx = 1, divy = 1,
-			int timer, cycle, len, ref, act, click = 0
-		]]
 		-- bg
 		{ id = "bgAAA", src = 0, x = 0, y = 0, w = -1, h = -1 },
 		{ id = "bgAA", src = 1, x = 0, y = 0, w = -1, h = -1 },
@@ -374,25 +307,9 @@ local function main()
 		-- stagefile surrogate image
 		{ id = "imgStageFileSurrogate", src = 16, x = 0, y = 0, w = -1, h = -1 },
 	}
-	skin.imageset = {
-		--[[
-			bms.player.beatoraja.skin.JSONSkinLoader.ImageSet
-			String id, int ref, String[] images, int act, int click = 0
-		]]
-	}
-	skin.value = {
-		--[[
-			bms.player.beatoraja.skin.JSONSkinLoader.Value
-			String id, String src, int x, y, w, h,
-			int divx = 1, divy = 1,
-			int timer, cycle, align, digit, padding, ref, String value, Value[] offset
-		]]
-	}
+	skin.imageset = {}
+	skin.value = {}
 	skin.text = {
-		--[[
-			bms.player.beatoraja.skin.JSONSkinLoader.Text
-			String id, String font, int size, int align, int ref
-		]]
 		-- music title align 1 = centering
 		{ id = "title", font = 0, size = 28, align = 1, ref = 12, overflow = 1 },
 		-- genre name
@@ -402,18 +319,8 @@ local function main()
 		-- folder name
 		{ id = "folder", font = 0, size = 18, align = 0, ref = 1003, overflow = 1 },
 	}
-	skin.judgegraph = {
-		--[[
-			bms.player.beatoraja.skin.JSONSkinLoader.JudgeGraph
-			String id, int type, int backTexOff = 0, int delay = 500,
-			int orderReverse = 0, int noGap = 0
-		]]
-	}
+	skin.judgegraph = {}
 	skin.gaugegraph = {
-		--[[
-			bms.player.beatoraja.skin.JSONSkinLoader.GaugeGraph
-			String id
-		]]
 		{ id = "gaugeGraph" }
 	}
 	-- base left position
@@ -446,20 +353,7 @@ local function main()
 		return left + basePosStageFile
 	end
 	-- dst
-	skin.destination = {
-		--[[
-			bms.player.beatoraja.skin.JSONSkinLoader.Destination
-			String id, int blend, filter, timer, loop, center, offset,
-			int[] offsets, int stretch = -1, int[] op, String draw,
-			Animation[] dst, Rect mouseRect
-				Animation {
-					int time, x, y, w, h, acc, a, r, g, b, angle
-				}
-				Rect {
-					int x, y, w, h
-				}
-		]]
-	}
+	skin.destination = {}
 	-- background image
 	if isBgByRank() then
 		insertAll(skin.destination, {
@@ -479,7 +373,7 @@ local function main()
 	end
 	-- layer image
 	if isLayerByRank() then
-		--loadCustomLayerAnimationScript(skin, ids, ops)
+		-- loadCustomLayerAnimationScript(skin, ids, ops)
 		loadCustomLayerAnimationScript(skin, { "lyFailed", "lyClear", "lyA", "lyAA", "lyAAA" }, {
 			{ 91 },
 			{ 90, -300, -301, -302 },
@@ -488,10 +382,10 @@ local function main()
 			{ 90, 300 },
 		})
 	elseif isLayerAll() then
-		--loadCustomLayerAnimationScript(skin, ids, ops)
+		-- loadCustomLayerAnimationScript(skin, ids, ops)
 		loadCustomLayerAnimationScript(skin, { "lyAll" }, { { 0 } })
 	else
-		--loadCustomLayerAnimationScript(skin, ids, ops)
+		-- loadCustomLayerAnimationScript(skin, ids, ops)
 		loadCustomLayerAnimationScript(skin, { "lyFailed", "lyClear" }, { { 91 }, { 90 } })
 	end
 	-- song title
@@ -645,7 +539,7 @@ local function main()
 		-- infos
 		do
 			-- comparison to mybest
-			--local ids = { "ClearType", "Rank", "ScoreRate", "ExScore", "MaxCombo", "MissCount" }
+			-- local ids = { "ClearType", "Rank", "ScoreRate", "ExScore", "MaxCombo", "MissCount" }
 			local posBottom = 332
 			for _ = 1, 6, 1 do
 				table.insert(skin.destination, { id = "lblRightArrow", dst = { { x = getDiffInfoLeft(329), y = posBottom, w = 11, h = 16 } } })

@@ -1,5 +1,5 @@
 Dozer - RESULT "NOT" SIMPLE FM
-ver. 1.0.0
+ver. 1.2.0
 
 
 ■背景画像、レイヤ画像
@@ -68,3 +68,10 @@ lua の記述方法については、プリセットの lua ファイルも参�
 	Graph Side のカスタマイズ内容の変更に応じて
 	ランクの表示位置を変更することができます。
 
+・終了アニメーション
+	Dozer_result\ending\(任意のフォルダ名)\ending.lua 
+	ファイルを作成し、記述してください。
+	戻り値となるローカル変数の parts には
+	source、image、destination を定義することができます。
+
+	load 関数に引数はありません。
