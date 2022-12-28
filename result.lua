@@ -2,11 +2,11 @@
 -- Dozer is result skin for beatoraja
 -- It is based on "RESULT SIMPLE FM" and "RESULT SIMPLE FM for beatoraja".
 -- @author Suzu Yuuki
--- @release 1.2.0
+-- @release 1.3.0
 
 local header = {
 	type = 7,
-	name = "Dozer - RESULT \"NOT\" SIMPLE FM 1.2.0",
+	name = "Dozer - RESULT \"NOT\" SIMPLE FM 1.3.0",
 	w = 1920,
 	h = 1080,
 	playstart = 1000,
@@ -23,6 +23,7 @@ local header = {
 				"Difficulty 5 (INSANE) String",
 				"Timing (FAST/SLOW) String",
 				"Show Current Time",
+				"Sociality Button",
 				"Ending Animation"
 			}
 		},
@@ -85,6 +86,12 @@ local header = {
 				{ name = "Off", op = 913 },
 				{ name = "Show Date (y/M/d)", op = 914 },
 				{ name = "Show Date and Time (y/M/d H:m:s)", op = 915 },
+			}
+		},
+		{
+			name = "Sociality Button", category = "Sociality Button", item = {
+				{ name = "Off", op = 916 },
+				{ name = "On", op = 917 },
 			}
 		},
 	},
@@ -185,6 +192,25 @@ local function isShowDateAndTime()
 	return skin_config.option["Show Current Time"] == 915
 end
 
+--- レイヤー非表示ボタンを表示するかどうか.
+local function isShowSocialityButton()
+	return skin_config.option["Sociality Button"] == 917
+end
+
+-- --------------------------------
+-- -------- レイヤー表示フィルター
+-- --------------------------------
+
+local _isLayerVisible = true
+local function isLayerVisible()
+	return _isLayerVisible
+end
+local function filterMode()
+	print("filterMode")
+	_isLayerVisible = not(_isLayerVisible)
+	print(_isLayerVisible)
+end
+
 -- --------------------------------
 -- -------- 外部 lua 呼び出しメソッド定義
 -- --------------------------------
@@ -200,7 +226,19 @@ local function loadCustomLayerAnimationScript(skin, ids, ops)
 	end)
 	if status then
 		for _, v in ipairs(parts.destination) do
-			table.insert(skin.destination, v)
+			local doInsert = true
+			for i in ipairs(v.op) do
+				if not(main_state.option(v.op[i])) then
+					doInsert = false
+					break
+				end
+			end
+			if doInsert then
+				v.draw = function()
+					return _isLayerVisible
+				end
+				table.insert(skin.destination, v)
+			end
 		end
 	end
 end
@@ -845,6 +883,27 @@ local function main()
 			table.insert(skin.value, { id = "numSecond", src = 13, x = 0, y = 0, w = 165, h = 16, divx = 11, digit = 2, ref = 26 })
 			table.insert(skin.destination, { id = "numSecond", dst = { { x = 1058, y = 360, w = 15, h = 16 } } })
 		end
+	end
+	-- sociality button
+	if isShowSocialityButton() then
+		table.insert(skin.image, {
+			id = "btnSociality", src = 12, x = 317, y = 273, w = 48, h = 48, act = filterMode
+		})
+		table.insert(skin.destination, {
+			id = "btnSociality", draw = isLayerVisible, dst = {
+				{ x = 4, y = 360, w = 48, h = 48 },
+			}
+		})
+		table.insert(skin.image, {
+			id = "btnSociality2", src = 12, x = 317, y = 273, w = 48, h = 48, act = filterMode,
+		})
+		table.insert(skin.destination, {
+			id = "btnSociality2", draw = function()
+					return not isLayerVisible()
+				end, dst = {
+				{ x = 4, y = 360, w = 48, h = 48, a = 0 },
+			}
+		})
 	end
 	-- opening animation
 	-- basic fade in

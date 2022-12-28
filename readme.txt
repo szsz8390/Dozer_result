@@ -1,11 +1,11 @@
 Dozer - RESULT "NOT" SIMPLE FM
-ver. 1.2.0
+ver. 1.3.0
 
 ■このスキンについて
 
 	beatoraja 用のリザルトスキンです。
 	RESULT SIMPLE FM をベースに、FullHD (1920 x 1080) で表示できるようにしてあります。
-	フォントに採用した x14y20pxScoreDozer がスキン名の元ネタになっています。
+	スキン名の元ネタは、フォントに採用した x14y20pxScoreDozer です。
 	なお、色々付け加えた結果あまりシンプルでもなくなったので "NOT" を付けています。
 
 ■特徴
@@ -70,14 +70,21 @@ ver. 1.2.0
 	・Show Date and Time (y/M/d H:m:s)
 		年月日に加え、時分秒も表示します。
 
+・Sociality Button
+	社会性ボタン……？
+	・Off
+		特に何もしません。
+	・On
+		左下らへんにカメラマークのボタンを表示します。
+		このボタンを押すと、このボタンとレイヤー画像が非表示になります。
+		非表示後、ボタンがあった場所を再度押すと
+		ボタンとレイヤー画像が表示状態に戻ります。
+
 ・Ending Animation
 	リザルト画面を終了する時のアニメーション表示を設定します。
+	デフォルトでは Fade Out のみです。
 	・Fade Out
 		通常のフェードアウト表示です。
-	・ModernChic Shutter (needs ModernChic Select Skin)
-		ModernChic セレクトスキンのシャッターを利用し、
-		シャッターが閉じるアニメーションを表示します。
-		このオプションを使うには ModernChic セレクトスキンが必要です。
 
 ○Background Image Customize
 
@@ -211,6 +218,10 @@ https://sz8390.hatenablog.com/
 
 
 ■更新履歴
+ver 1.3.0
+	社会性ボタンの追加
+	Ending Animation の同梱を廃止
+
 ver 1.2.0
 	minify 版を廃止
 	Ending Animation を lua カスタマイズ対応化
